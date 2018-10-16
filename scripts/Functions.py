@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 """Functions used to compute the loss and weights."""
+import numpy as np
+import matplotlib.pyplot as plt
+
+
 
 # ******************************************************
 # HELPER FUNCTIONS 
@@ -15,8 +19,8 @@ def build_model_data(y_feature, x_feature):
 def build_poly(x, degree):
     """polynomial basis functions for input data x, for j=0 up to j=degree."""
     poly_basis = np.ones((len(x), 1))
-    for deg in range((1, deg + 1)) :
-        poly_basis = np.c_[poly, np.power(x, deg)]
+    for deg in range(1, degree + 1) :
+        poly_basis = np.c_[poly_basis, np.power(x, deg)]
     return poly_basis
 
 def mse(e) :
@@ -49,6 +53,27 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
         if start_index != end_index:
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
+def build_k_indices(y, k_fold, seed):
+    """build k indices for k-fold."""
+    num_row = y.shape[0]
+    interval = int(num_row / k_fold)
+    np.random.seed(seed)
+    indices = np.random.permutation(num_row)
+    k_indices = [indices[k * interval: (k + 1) * interval]
+                 for k in range(k_fold)]
+    return np.array(k_indices)
+
+def cross_validation_visualization(lambds, mse_tr, mse_te):
+    """visualization the curves of mse_tr and mse_te."""
+    plt.semilogx(lambds, mse_tr, marker=".", color='b', label='train error')
+    plt.semilogx(lambds, mse_te, marker=".", color='r', label='test error')
+    plt.xlabel("lambda")
+    plt.ylabel("rmse")
+    plt.title("cross validation")
+    plt.legend(loc=2)
+    plt.grid(True)
+    plt.savefig("cross_validation")
+
 
 # ******************************************************
 
@@ -56,7 +81,7 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
 # ******************************************************
 # REGRESSION METHODS
 # ******************************************************
-def least squares GD(y, tx, initial w,max_iters, gamma) :
+def least_squares_GD(y, tx, initial_w,max_iters, gamma) :
     w = initial_w
     loss = 0
     for n_iter in range(max_iters):
@@ -70,7 +95,7 @@ def least squares GD(y, tx, initial w,max_iters, gamma) :
         losses.append(loss)
     return w, loss
 
-def least squares SGD(y, tx, initial w, max_iters, gamma) :
+def least_squares_SGD(y, tx, initial_w, max_iters, gamma) :
     loss = 0
     w = initial_w
     for n_iter in range(max_iters):
@@ -80,13 +105,13 @@ def least squares SGD(y, tx, initial w, max_iters, gamma) :
             w = w - gamma*gradient
     return w, loss
 
-def least squares(y, tx) :
+def least_squares(y, tx) :
     w = np.linalg.solve(tx.T.dot(tx), tx.T.dot(y))
     loss = compute_loss(y, tx, w)
     return w, loss
 
 
-def ridge regression(y, tx, lambda_) :
+def ridge_regression(y, tx, lambda_) :
     A = tx.T.dot(tx) 
     B = tx.T.dot(y)
     lambda_prime =  lambda_ * 2 * len(y)
@@ -95,8 +120,28 @@ def ridge regression(y, tx, lambda_) :
     return w, loss
 
 
-
-
+def cross_validation(y, x, k_indices, k, lambda_, degree):
+    
+    #Build test and training set
+    te_indice = k_indices[k]
+    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)]
+    tr_indice = tr_indice.reshape(-1)
+    y_test = y[te_indice]
+    y_train = y[tr_indice]
+    X_test = x[te_indice]
+    X_train = x[tr_indice]
+    
+    #form data with polynomial degree
+    tx_training = build_poly(X_train, degree)
+    tx_test = build_poly(X_test, degree)
+    
+    #ridge regression
+    w, loss = ridge_regression(y_train, tx_training, lambda_)
+    
+    #calculate the loss for train and test data
+    loss_tr = np.sqrt(2 * loss)
+    loss_te = np.sqrt(2 * compute_loss(y_test, tx_test, w))
+    return loss_tr, loss_te, w
 
 
     
