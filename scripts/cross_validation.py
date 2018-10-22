@@ -49,29 +49,26 @@ def cross_validation(y, x, k_indices, k, regression_technique, **args):
     return loss_tr, loss_te, w
 
 def cross_validation_demo(y, x, regression_technique, **args):
-	f = IntProgress(min=0, max=30) # instantiate the bar
-	display(f) # display the bar
+    f = IntProgress(min=0, max=30) # instantiate the bar
+    display(f) # display the bar
 
-	seed = 12
-	k_fold = 4
-	# split data in k fold
-	k_indices = build_k_indices(y, k_fold, seed)
-	# define lists to store the loss of training data and test data
- 
-	count = 0
-	min_rmse_tr = []
-	min_rmse_te = []
-	for k in range(k_fold) :
-	    loss_tr, loss_te, _ = cross_validation(y, x, k_indices, k, regression_technique, **args)
-	    min_rmse_tr.append(loss_tr)
-	    min_rmse_te.append(loss_te)
+    seed = 12
+    k_fold = 4
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+    count = 0
+    min_rmse_tr = []
+    min_rmse_te = []
+    for k in range(k_fold) :
+        loss_tr, loss_te, _ = cross_validation(y, x, k_indices, k, regression_technique, **args)
+        min_rmse_tr.append(loss_tr)
+        min_rmse_te.append(loss_te)
 
-	f.value += 1 # signal to increment the progress bar
-	time.sleep(.1)
-	count += 1
-    print(min_rmse_tr)
-    print(min_rmse_te)
-	cross_validation_visualization(np.arange(k_fold), min_rmse_tr, min_rmse_te, 'folds') #TO CHANGE
+    f.value += 1 # signal to increment the progress bar
+    time.sleep(.1)
+    count += 1
+    cross_validation_visualization(np.arange(k_fold), min_rmse_tr, min_rmse_te, 'folds') #TO CHANGE
 
 
 # ******************************************************
@@ -117,32 +114,37 @@ def cross_validation_ridge_demo(y, x):
     global_min_tr = []
     global_min_te = []
     best_lambdas = []
+    global_w = []
     for deg in degree:
         rmse_tr = []
         rmse_te = []
+        w_list = []
         for lambda_ in lambdas :
             min_rmse_tr = []
             min_rmse_te = []
+            w_k = []
             for k in range(k_fold) :
-                loss_tr, loss_te, _ = cross_validation_ridge(y, x, k_indices, k,lambda_ , deg)
+                loss_tr, loss_te, w = cross_validation_ridge(y, x, k_indices, k,lambda_ , deg)
                 min_rmse_tr.append(loss_tr)
                 min_rmse_te.append(loss_te)
+                w_k.append(w)
             rmse_tr.append(np.mean(min_rmse_tr))
             rmse_te.append(np.mean(min_rmse_te))
+            w_list.append(np.mean(w_k, axis=0))
             
         indice = np.argmin(rmse_te)
         global_min_tr.append(rmse_tr[indice])
         global_min_te.append(rmse_te[indice])
         best_lambdas.append(lambdas[indice])
+        global_w.append(w_list[indice])
+        
         
         f.value += 1 # signal to increment the progress bar
         time.sleep(.1)
         count += 1
-
+     
     cross_validation_visualization(degree, global_min_tr, global_min_te, 'degrees')
-    print(best_lambdas)
-    print(global_min_tr)
-    print(global_min_te)
+    return best_lambdas, global_min_tr, global_min_te, global_w
 
 
 # ******************************************************
