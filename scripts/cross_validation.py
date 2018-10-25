@@ -110,7 +110,7 @@ def cross_validation_ridge_demo(y, x):
     # define lists to store the loss of training data and test data
      
     count = 0
-    degree = np.arange(1,5)
+    degree = [1,9]
     global_min_tr = []
     global_min_te = []
     best_lambdas = []
