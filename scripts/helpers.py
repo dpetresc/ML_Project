@@ -44,3 +44,4 @@ def compute_gradient(y, tx, w):
 
 def sigmoid(t):
     return 1.0 / (1 + np.exp(-t))
+

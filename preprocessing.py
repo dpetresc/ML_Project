@@ -57,7 +57,7 @@ def inv_log_f(x) :
 	return x_inv
 
 
-def process_data(path, select=False, weight_col=False, inv_log=False) :
+def process_data(path, select=False, weight_col=False, inv_log=False):
 	y, X, ids = load_csv_data(path)
 	new_X = X
 
@@ -107,9 +107,31 @@ def process_data2(x_train, x_test, select=False, weight_col=False, inv_log=False
 	
 	x_train,_, _  = standardize(x_train)
 	x_test,_, _  = standardize(x_test)
-	x_train = np.hstack((np.ones((x_train.shape[0], 1)), x_train))
-	x_test = np.hstack((np.ones((x_test.shape[0], 1)), x_test))
+	#x_train = np.hstack((np.ones((x_train.shape[0], 1)), x_train))
+	#x_test = np.hstack((np.ones((x_test.shape[0], 1)), x_test))
 	return x_train, x_test
+
+def process_data3(x_test, select=False, weight_col=False, inv_log=False) :
+	for i in range(x_test.shape[1]):
+        	# If NA values in column
+		if na(x_test[:, i]):
+		    msk_test = (x_test[:, i] != -999.)
+		    # Replace NA values with most frequent value
+		    values, counts = np.unique(x_test[msk_test, i], return_counts=True)
+		    # If there are values different from NA
+		    if (len(values) > 1):
+		        x_test[~msk_test, i] = values[np.argmax(counts)]
+		    else:
+		        x_test[~msk_test, i] = 0
+	
+	if(inv_log) :
+		x_test = inv_log_f(x_test)
+		
+	
+	x_test,_, _  = standardize(x_test)
+	#x_train = np.hstack((np.ones((x_train.shape[0], 1)), x_train))
+	#x_test = np.hstack((np.ones((x_test.shape[0], 1)), x_test))
+	return x_test
 
 
 
