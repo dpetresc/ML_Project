@@ -84,12 +84,12 @@ def inv_log_f(x) :
     # x_inv_log_cols = np.log(1 / (1 + x[:, inv_log_cols]))
     x_inv_log_cols = np.log(x[:, inv_log_cols])
     # x[:, inv_log_cols] = np.log(x[:, inv_log_cols])
-    # x[:, others] = np.log(x[:, others] + 1 - np.min(x[:, others]))
+    #x[:, others] = np.log(x[:, others] + 1 - np.min(x[:, others]))
 
-    # temp = x[:, others]
-    # x_others = np.log(temp + 1 - np.min(temp))
+    #temp = x[:, others]
+    #x_others = np.log(temp + 1 - np.min(temp))
     x_inv = np.hstack((x, x_inv_log_cols))
-    # x_inv = np.hstack((x_inv_log_cols, x_others))
+    #x_inv = np.hstack((x_inv, x_others))
     # x_inv = np.hstack((x, x_inv))
     return x_inv
 

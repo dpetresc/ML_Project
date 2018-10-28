@@ -9,9 +9,9 @@ import time
 def calculate_accuracy(y, y_pred):
     """
 
-    :param y:
-    :param y_pred:
-    :return:
+    :param y: actual y
+    :param y_pred: the predictions
+    :return: accuracy
     """
     accuracy = np.count_nonzero(y == y_pred) / len(y) * 100
     return accuracy
@@ -300,6 +300,16 @@ def best_model_ridge(y, x, k_fold, degrees, lambdas, seed=56):
 #     return best_degree, best_lambda
 
 def cross_validation_logistic(y, x, k_indices, k, degree, lambda_):
+    """
+
+        :param y:
+        :param x:
+        :param k_indices:
+        :param k:
+        :param degree:
+        :param lambda_:
+        :return:
+    """
     # Build test and training set
     te_indice = k_indices[k]
     tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)]
@@ -328,7 +338,13 @@ def cross_validation_logistic(y, x, k_indices, k, degree, lambda_):
     return loss_tr, loss_te, w
 
 
-def cross_validation_logistic_demo(y, x):
+def cross_validation_logistic_demo(y, x, lambda_):
+    """
+
+        :param y:
+        :param x:
+        :return:
+    """
     seed = 12
     k_fold = 5
     # split data in k fold
@@ -336,7 +352,7 @@ def cross_validation_logistic_demo(y, x):
     # define lists to store the loss of training data and test data
 
     count = 0
-    degree = np.array([1, 2, 3, 4])
+    degree = np.array([2])
     global_min_tr = []
     global_min_te = []
     global_w = []
@@ -356,14 +372,14 @@ def cross_validation_logistic_demo(y, x):
             max_loss_te = 0
             max_loss_tr = 0
             max_w = []
-            for lam in np.logspace(-10, 0, 10):
+            for lam in np.array([lambda_]):
                 loss_tr, loss_te, w = cross_validation_logistic(y, x, k_indices, k, deg, lam)
                 if loss_te > max_loss_te:
                     max_loss_te = loss_te
                     max_lambda = lam
                     max_loss_tr = loss_tr
                     max_w = w
-            print('DEGREE', deg, 'lambda', max_lambda, 'loss test', max_loss_te)
+            print('DEGREE', deg, 'lambda', max_lambda, 'accuracy', max_loss_te)
             min_rmse_tr.append(max_loss_tr)
             min_rmse_te.append(max_loss_te)
             w_k.append(max_w)
@@ -377,5 +393,63 @@ def cross_validation_logistic_demo(y, x):
         global_w.append(np.mean(w_k, axis=0))
         global_lambdas.append(np.mean(lambdas))
 
-    visu.cross_validation_visualization(degree, global_min_tr, global_min_te, 'degrees')
+    visu.cross_validation_visualization(degree, global_min_tr, global_min_te)
+    return global_min_tr, global_min_te, global_w
+
+def cross_validation_logistic_demo_fixedparams(y, x, lambda_):
+    """
+
+        :param y:
+        :param x:
+        :return:
+    """
+    seed = 12
+    k_fold = 5
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+
+    count = 0
+    degree = np.array([2])
+    global_min_tr = []
+    global_min_te = []
+    global_w = []
+    global_lambdas = []
+
+    f = IntProgress(min=0, max=k_fold * len(degree))  # instantiate the bar
+    display(f)  # display the bar
+
+    for deg in degree:
+
+        min_rmse_tr = []
+        min_rmse_te = []
+        w_k = []
+        lambdas = []
+        for k in range(k_fold):
+            loss_tr, loss_te, w = cross_validation_logistic(y, x, k_indices, k, 2, lambda_)
+            max_lambda = 0
+            max_loss_te = 0
+            max_loss_tr = 0
+            max_w = []
+            for lam in np.array([lambda_]):
+                if loss_te > max_loss_te:
+                    max_loss_te = loss_te
+                    max_lambda = lam
+                    max_loss_tr = loss_tr
+                    max_w = w
+            print('DEGREE', deg, 'lambda', max_lambda, 'accuracy', max_loss_te)
+            min_rmse_tr.append(max_loss_tr)
+            min_rmse_te.append(max_loss_te)
+            w_k.append(max_w)
+            lambdas.append(max_lambda)
+            f.value += 1  # signal to increment the progress bar
+            time.sleep(.1)
+            count += 1
+
+        global_min_tr.append(np.mean(min_rmse_tr))
+        global_min_te.append(np.mean(min_rmse_te))
+        global_w.append(np.mean(w_k, axis=0))
+        global_lambdas.append(np.mean(lambdas))
+
+    visu.cross_validation_visualization(degree, global_min_tr, global_min_te)
     return global_min_tr, global_min_te, global_w

@@ -232,7 +232,7 @@ def learning_by_penalized_gradient_logistic(y, tx, w, gamma, lambda_):
     w = w - gamma * gradient
     return w, loss
 
-def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+def reg_logistic_regression(y, tx, lambda_):
     """Regularized logistic regression using SGD
 
         :param y: outpus/labels, numpy array (-1 = background and 1 = signal)
@@ -249,10 +249,10 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     #     if iter % 1000 == 0:
     #         print("Iteration: ", str(iter), " loss: ", str(loss))
     # return w, loss
-    max_iters = 100
+    max_iters = 500
     w = np.ones(tx.shape[1])
     for n_iter in range(max_iters):
         gamma = 1/(n_iter+1)
-        for y_b, tx_b in batch_iter(y, tx, batch_size=20, num_batches=1):
+        for y_b, tx_b in batch_iter(y, tx, batch_size=30, num_batches=1):
             w, loss = learning_by_penalized_gradient_logistic(y_b, tx_b, w, gamma, lambda_)
     return w, loss
