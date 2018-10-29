@@ -2,7 +2,16 @@
 """additional visualization functions used for project 1."""
 import numpy as np
 import matplotlib.pyplot as plt
-import helpers_us as helper
+
+
+def get_jet_masks(x):
+    """Separate the data into subsets depending on pri_jet_num
+
+        :param x: data
+        :return: subsets that have the same pri_jet_num
+    """
+    dictionary = {0: x[:, 22] == 0, 1: x[:, 22] == 1, 2: np.logical_or(x[:, 22] == 2, x[:, 22] == 3)}
+    return dictionary
 
 
 def cross_validation_visualization(lambds, mse_tr, mse_te):
@@ -14,7 +23,8 @@ def cross_validation_visualization(lambds, mse_tr, mse_te):
     plt.title("cross validation")
     plt.legend(loc=2)
     plt.grid(True)
-    plt.savefig("cross_validation")
+    plt.show()
+
 
 def cross_validation_visualization_ridge(lambds, mse_tr, mse_te, degree=0, marker_x=None, marker_y=None):
     """visualization the curves of mse_tr and mse_te."""
@@ -27,6 +37,7 @@ def cross_validation_visualization_ridge(lambds, mse_tr, mse_te, degree=0, marke
     plt.grid(True)
     plt.plot(marker_x, marker_y, marker='*', color='g', markersize=10)
     plt.show()
+
 
 def bias_variance_decomposition_visualization(degrees, rmse_tr, rmse_te):
     """visualize the bias variance decomposition."""
@@ -67,45 +78,3 @@ def bias_variance_decomposition_visualization(degrees, rmse_tr, rmse_te):
     plt.ylabel("error")
     plt.title("Bias-Variance Decomposition")
     plt.savefig("bias_variance")
-
-def visualization_classification(y, x, mean_x, std_x, w, save_name):
-    """visualize the raw data as well as the classification result."""
-    fig = plt.figure()
-    # plot raw data
-    x = helper.de_standardize(x, mean_x, std_x)
-    ax1 = fig.add_subplot(1, 2, 1)
-    males = np.where(y == 1)
-    females = np.where(y == 0)
-    ax1.scatter(
-        x[males, 0], x[males, 1],
-        marker='.', color=[0.06, 0.06, 1], s=20)
-    ax1.scatter(
-        x[females, 0], x[females, 1],
-        marker='*', color=[1, 0.06, 0.06], s=20)
-    ax1.set_xlabel("Height")
-    ax1.set_ylabel("Weight")
-    ax1.grid()
-    # plot raw data with decision boundary
-    ax2 = fig.add_subplot(1, 2, 2)
-    height = np.arange(
-        np.min(x[:, 0]), np.max(x[:, 0]) + 0.01, step=0.01)
-    weight = np.arange(
-        np.min(x[:, 1]), np.max(x[:, 1]) + 1, step=1)
-    hx, hy = np.meshgrid(height, weight)
-    hxy = (np.c_[hx.reshape(-1), hy.reshape(-1)] - mean_x) / std_x
-    x_temp = np.c_[np.ones((hxy.shape[0], 1)), hxy]
-    prediction = x_temp.dot(w) > 0.5
-    prediction = prediction.reshape((weight.shape[0], height.shape[0]))
-    ax2.contourf(hx, hy, prediction, 1)
-    ax2.scatter(
-        x[males, 0], x[males, 1],
-        marker='.', color=[0.06, 0.06, 1], s=20)
-    ax2.scatter(
-        x[females, 0], x[females, 1],
-        marker='*', color=[1, 0.06, 0.06], s=20)
-    ax2.set_xlabel("Height")
-    ax2.set_ylabel("Weight")
-    ax2.set_xlim([min(x[:, 0]), max(x[:, 0])])
-    ax2.set_ylim([min(x[:, 1]), max(x[:, 1])])
-    plt.tight_layout()
-    plt.savefig(save_name)

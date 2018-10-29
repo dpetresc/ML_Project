@@ -199,34 +199,37 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         :param gamma: learning rate
         :return: (w, loss) where w is the last weight vector and loss is the corresponding loss value
     """
-    # w = initial_w
-    # for iter in range(max_iters):
-    #     w, loss = learning_by_gradient_descent_logistic(y, tx, w, gamma)
-    #     if iter % 100 == 0:
-    #         print("Iteration: ", str(iter), " loss: ", str(loss))
-    # return w, loss
     max_iters = 300
     w = np.ones(tx.shape[1])
-    # w = w / np.linalg.norm(w)
-    # loss = 0
 
     for n_iter in range(max_iters):
         gamma = 1 / (n_iter + 1)
-        # gamma = 0.01
         for y_b, tx_b in batch_iter(y, tx, batch_size=20, num_batches=1):
             w, loss = learning_by_gradient_descent_logistic(y_b, tx_b, w, gamma)
     return w, loss
 
 def penalized_logistic_regression(y, tx, w, lambda_):
-    """return the loss and gradient."""
+    """Calculate gradient and loss for penalized logistic regression
+
+        :param y: outpus/labels, numpy array (-1 = background and 1 = signal)
+        :param tx: standardized inputs/features augmented with the first column filled with 1's
+        :param w: weights
+        :param lambda_: regularization factor (penalty factor)
+        :return: gradient and loss
+    """
     gradient = calculate_gradient_logistic(y, tx, w) + 2 * lambda_ * w
     loss = calculate_loss_logistic(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
     return gradient, loss
 
 def learning_by_penalized_gradient_logistic(y, tx, w, gamma, lambda_):
-    """
-    Do one step of gradient descent, using the penalized logistic regression.
-    Return the loss and updated w.
+    """Do one step of gradient descent, using the penalized logistic regression.
+
+        :param y: outpus/labels, numpy array (-1 = background and 1 = signal)
+        :param tx: standardized inputs/features augmented with the first column filled with 1's
+        :param w: actual weights
+        :param gamma: learning rate
+        :param lambda_: regularization factor (penalty factor)
+        :return: updated weight and loss
     """
     gradient, loss = penalized_logistic_regression(y, tx, w, lambda_)
     w = w - gamma * gradient
@@ -243,12 +246,6 @@ def reg_logistic_regression(y, tx, lambda_):
         :param gamma: learning rate
         :return: (w, loss) where w is the last weight vector and loss is the corresponding loss value
     """
-    # w = initial_w
-    # for iter in range(max_iters):
-    #     w, loss = learning_by_penalized_gradient_logistic(y, tx, w, gamma, lambda_)
-    #     if iter % 1000 == 0:
-    #         print("Iteration: ", str(iter), " loss: ", str(loss))
-    # return w, loss
     max_iters = 500
     w = np.ones(tx.shape[1])
     for n_iter in range(max_iters):

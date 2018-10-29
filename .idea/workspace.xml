@@ -3,8 +3,25 @@
   <component name="ChangeListManager">
     <list default="true" id="64fc773a-2efb-4b98-b131-273e76b8390c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/IEEEtran.bst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/IEEEtran.cls" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/latex-template.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/latex-template.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/literature.bib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cross_validation.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/helpers_us.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpers_us.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/implementations.py" beforeDir="false" afterPath="$PROJECT_DIR$/implementations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/latex-example-paper/IEEEtran.bst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/latex-example-paper/IEEEtran.cls" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/latex-example-paper/latex-template.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/latex-example-paper/latex-template.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/latex-example-paper/literature.bib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_selection.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_selection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/preprocessing.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/project.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/project.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/helpers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/preprocessing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualization.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,38 +33,39 @@
     <session id="970832214">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="8" />
+          <entry key="project.closed" value="12" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.10" value="1" />
+          <entry key="project.open.time.10" value="2" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.15" value="1" />
           <entry key="project.open.time.41" value="1" />
           <entry key="project.open.time.43" value="1" />
-          <entry key="project.open.time.9" value="2" />
-          <entry key="project.opened" value="9" />
+          <entry key="project.open.time.7" value="2" />
+          <entry key="project.open.time.9" value="3" />
+          <entry key="project.opened" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="17" />
+          <entry key="py" value="18" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="17" />
+          <entry key="Python" value="18" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="15" />
-          <entry key="py" value="4821" />
+          <entry key="py" value="6439" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="15" />
-          <entry key="Python" value="4821" />
+          <entry key="Python" value="6439" />
         </counts>
       </usages-collector>
     </session>
@@ -57,16 +75,16 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/implementations.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4536">
-              <caret line="252" column="28" selection-start-line="252" selection-start-column="28" selection-end-line="252" selection-end-column="28" />
+            <state relative-caret-position="-8377">
+              <caret selection-end-line="1" selection-end-column="40" />
               <folding>
-                <marker date="1540755151653" expanded="true" signature="2938:2939" ph="..." />
-                <marker date="1540755151653" expanded="true" signature="3518:3519" ph="..." />
-                <marker date="1540755151653" expanded="true" signature="3518:4005" ph="..." />
-                <marker date="1540755151653" expanded="true" signature="4387:4388" ph="..." />
-                <marker date="1540755151653" expanded="true" signature="4387:4477" ph="..." />
-                <marker date="1540755151653" expanded="true" signature="5114:5119" ph="..." />
-                <marker date="1540755151653" expanded="true" signature="5416:5425" ph="..." />
+                <marker date="1540827883973" expanded="true" signature="2938:2939" ph="..." />
+                <marker date="1540827883973" expanded="true" signature="3518:3519" ph="..." />
+                <marker date="1540827883973" expanded="true" signature="3518:4005" ph="..." />
+                <marker date="1540827883973" expanded="true" signature="4387:4388" ph="..." />
+                <marker date="1540827883973" expanded="true" signature="4387:4477" ph="..." />
+                <marker date="1540827883973" expanded="true" signature="5114:5119" ph="..." />
+                <marker date="1540827883973" expanded="true" signature="5416:5425" ph="..." />
               </folding>
             </state>
           </provider>
@@ -75,8 +93,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model_selection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="397" selection-start-line="397" selection-end-line="397" />
+            <state relative-caret-position="288">
+              <caret line="35" column="7" lean-forward="true" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -87,8 +105,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/visualization.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="10" column="75" selection-start-line="10" selection-start-column="75" selection-end-line="10" selection-end-column="75" />
+            <state relative-caret-position="479">
+              <caret line="40" selection-start-line="40" selection-end-line="40" />
               <folding>
                 <element signature="e#85#103#0" expanded="true" />
               </folding>
@@ -96,46 +114,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/helpers_us.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="165" column="16" selection-start-line="165" selection-start-column="16" selection-end-line="165" selection-end-column="16" />
+            <state relative-caret-position="4068">
+              <caret line="113" column="19" selection-start-line="113" selection-start-column="19" selection-end-line="113" selection-end-column="19" />
               <folding>
                 <element signature="e#79#118#0" expanded="true" />
-                <marker date="1540819179844" expanded="true" signature="787:790" ph="..." />
-                <marker date="1540819179844" expanded="true" signature="4144:6118" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/preprocessing.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/run.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1782">
-              <caret line="102" column="17" selection-start-line="102" selection-start-column="17" selection-end-line="102" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cross_validation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="702">
-              <caret line="47" column="37" selection-start-line="47" selection-start-column="37" selection-end-line="47" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/preprocessing.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1350">
-              <caret line="78" selection-start-line="78" selection-end-line="78" />
-              <folding>
-                <element signature="e#78#96#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-853">
+              <caret line="116" lean-forward="true" selection-start-line="116" selection-end-line="116" />
             </state>
           </provider>
         </entry>
@@ -143,20 +138,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/proj1_helpers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="26" column="18" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="18" />
+            <state relative-caret-position="828">
+              <caret line="23" column="30" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
               <folding>
                 <element signature="e#67#77#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/helpers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="828">
-              <caret line="46" selection-start-line="46" selection-end-line="46" />
             </state>
           </provider>
         </entry>
@@ -174,6 +160,7 @@
     <findStrings>
       <find>rmse</find>
       <find>zeros</find>
+      <find>count</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -186,12 +173,15 @@
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/scripts/visualization.py" />
         <option value="$PROJECT_DIR$/scripts/helpers_us.py" />
-        <option value="$PROJECT_DIR$/visualization.py" />
         <option value="$PROJECT_DIR$/scripts/helpers.py" />
         <option value="$PROJECT_DIR$/preprocessing.py" />
+        <option value="$PROJECT_DIR$/cross_validation.py" />
         <option value="$PROJECT_DIR$/implementations.py" />
         <option value="$PROJECT_DIR$/model_selection.py" />
+        <option value="$PROJECT_DIR$/proj1_helpers.py" />
         <option value="$PROJECT_DIR$/helpers_us.py" />
+        <option value="$PROJECT_DIR$/visualization.py" />
+        <option value="$PROJECT_DIR$/run.py" />
       </list>
     </option>
   </component>
@@ -201,7 +191,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="y" value="81" />
     <option name="width" value="2426" />
     <option name="height" value="1359" />
@@ -211,7 +201,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -219,15 +208,11 @@
               <item name="ML_Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="ML_Project" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="ML_Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ML_Project" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -292,14 +277,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-2" width="1920" height="1082" extended-state="6" />
+    <frame x="0" y="35" width="2426" height="1405" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20864461" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22241232" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3298153" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -314,7 +299,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.32976905" />
       <window_info anchor="right" id="R Graphics" order="4" />
       <window_info anchor="right" id="R Packages" order="5" />
       <window_info anchor="right" x="0" y="0" width="413" height="855" id="Documentation" order="6" side_tool="true" weight="0.32982844" />
@@ -359,92 +344,70 @@
     <entry file="file://$PROJECT_DIR$/scripts/plot.py" />
     <entry file="file://$PROJECT_DIR$/scripts/Functions.py" />
     <entry file="file://$PROJECT_DIR$/scripts/cross_validation.py" />
+    <entry file="file://$PROJECT_DIR$/scripts/preprocessing.py" />
+    <entry file="file://$PROJECT_DIR$/scripts/helpers.py" />
+    <entry file="file://$PROJECT_DIR$/cross_validation.py" />
+    <entry file="file://$PROJECT_DIR$/preprocessing.py" />
     <entry file="file://$PROJECT_DIR$/implementations.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4536">
-          <caret line="252" column="28" selection-start-line="252" selection-start-column="28" selection-end-line="252" selection-end-column="28" />
+        <state relative-caret-position="-8377">
+          <caret selection-end-line="1" selection-end-column="40" />
           <folding>
-            <marker date="1540755151653" expanded="true" signature="2938:2939" ph="..." />
-            <marker date="1540755151653" expanded="true" signature="3518:3519" ph="..." />
-            <marker date="1540755151653" expanded="true" signature="3518:4005" ph="..." />
-            <marker date="1540755151653" expanded="true" signature="4387:4388" ph="..." />
-            <marker date="1540755151653" expanded="true" signature="4387:4477" ph="..." />
-            <marker date="1540755151653" expanded="true" signature="5114:5119" ph="..." />
-            <marker date="1540755151653" expanded="true" signature="5416:5425" ph="..." />
+            <marker date="1540827883973" expanded="true" signature="2938:2939" ph="..." />
+            <marker date="1540827883973" expanded="true" signature="3518:3519" ph="..." />
+            <marker date="1540827883973" expanded="true" signature="3518:4005" ph="..." />
+            <marker date="1540827883973" expanded="true" signature="4387:4388" ph="..." />
+            <marker date="1540827883973" expanded="true" signature="4387:4477" ph="..." />
+            <marker date="1540827883973" expanded="true" signature="5114:5119" ph="..." />
+            <marker date="1540827883973" expanded="true" signature="5416:5425" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/visualization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="10" column="75" selection-start-line="10" selection-start-column="75" selection-end-line="10" selection-end-column="75" />
+        <state relative-caret-position="479">
+          <caret line="40" selection-start-line="40" selection-end-line="40" />
           <folding>
             <element signature="e#85#103#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/preprocessing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1782">
-          <caret line="102" column="17" selection-start-line="102" selection-start-column="17" selection-end-line="102" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cross_validation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="702">
-          <caret line="47" column="37" selection-start-line="47" selection-start-column="37" selection-end-line="47" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/preprocessing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
-          <caret line="78" selection-start-line="78" selection-end-line="78" />
-          <folding>
-            <element signature="e#78#96#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/proj1_helpers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="26" column="18" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="18" />
-          <folding>
-            <element signature="e#67#77#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/helpers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="46" selection-start-line="46" selection-end-line="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model_selection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="397" selection-start-line="397" selection-end-line="397" />
+        <state relative-caret-position="288">
+          <caret line="35" column="7" lean-forward="true" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/proj1_helpers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="23" column="30" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
+          <folding>
+            <element signature="e#67#77#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/helpers_us.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="165" column="16" selection-start-line="165" selection-start-column="16" selection-end-line="165" selection-end-column="16" />
+        <state relative-caret-position="4068">
+          <caret line="113" column="19" selection-start-line="113" selection-start-column="19" selection-end-line="113" selection-end-column="19" />
           <folding>
             <element signature="e#79#118#0" expanded="true" />
-            <marker date="1540819179844" expanded="true" signature="787:790" ph="..." />
-            <marker date="1540819179844" expanded="true" signature="4144:6118" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-853">
+          <caret line="116" lean-forward="true" selection-start-line="116" selection-end-line="116" />
         </state>
       </provider>
     </entry>
