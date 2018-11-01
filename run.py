@@ -47,115 +47,101 @@ def process_data(path, inv_log=False):
 
     return y, new_X, dict_mask_jets_train, ids
 
-
-def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
-    """Cross validation helper function for ridge regression techniques
+def reg_logistic_regression(y, X, k_indices, k, degree, lam, max_iters, initial_w, gamma, batch, reg):
+    """function for ridge regression
 
         :param y: outpus/labels, numpy array (-1 = background and 1 = signal)
-        :param x: vector of the data samples
+        :param X: vector of the data samples
         :param k_indices: k indices groups for k-fold
         :param k: k'th group to select
-        :param lambda_: regularization factor (penalty factor)
         :param degree: maximum degree of the polynomial basis
-        :return: loss for train, loss for test, weights
+        :param lam: regularization factor (penalty factor)
+        :param max_iters: number of steps for the gradient descent
+        :param initial_w: initial weights
+        :param gamma: gradient descent factor, (1/t, for t iterations. adaptive gradient descent factor) if gamma == -1
+        :param batch: batch size
+        :param reg: if True, regularized logistic regression, else, normal logistic regression
+        :return: loss for train, accuracy for test, weights.
     """
-    # Build test and training set
     te_indice = k_indices[k]
-    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)]
-    tr_indice = tr_indice.reshape(-1)
+    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)].reshape(-1)
     y_test = y[te_indice]
     y_train = y[tr_indice]
-    X_test = x[te_indice]
-    X_train = x[tr_indice]
-
-    # form data with polynomial degree
-    tx_train = modselection.build_poly(X_train, degree)
+    X_test = X[te_indice]
+    X_train = X[tr_indice]
+    tx_training = modselection.build_poly(X_train, degree)
     tx_test = modselection.build_poly(X_test, degree)
 
-    # ridge regression
-    w, loss = imp.ridge_regression(y_train, tx_train, lambda_)
+    w = initial_w
 
-    # calculate the loss for train and test data
-    loss_train = imp.calculate_rmse(loss)
-    loss_test = imp.calculate_rmse(imp.compute_loss(y_test, tx_test, w))
-    accuracy = modselection.calculate_accuracy(y_test, helpers.predict_labels(w, tx_test))
-    return loss_train, loss_test, accuracy, w
+    progressif = 0
+    if gamma == -1:
+        progressif = 1
+
+    for n_iter in range(max_iters):
+        gamma = progressif*(1/(n_iter+1)) + (1-progressif)*gamma #formula to determine gamma
+        for y_b, tx_b in imp.batch_iter(y_train, tx_training, batch_size=batch, num_batches=1):
+            if reg==True:
+                w, loss_tr = imp.learning_by_penalized_gradient_logistic(y_b, tx_b, w, gamma, lam)
+            else:
+                w, loss_tr = imp.learning_by_gradient_descent_logistic(y_b, tx_b, w, gamma)
+    accuracy_te = np.sum(np.where(np.abs(y_test - imp.sigmoid(tx_test @ w)) < 0.5, 1, 0)) / len(y_test)
+    return loss_tr, accuracy_te, w
 
 
-def best_model_ridge(y, x, k_fold, degrees, lambdas, seed=56):
-    """Calculate best degree and best lambda
+def cross_reg_logistic_regression(y, X, degree, k_fold, lambda_, max_iters,
+                                  gamma = -1,  batch = 50, reg = True):
+    """Cross validation function for logistic regression techniques
 
         :param y: outpus/labels, numpy array (-1 = background and 1 = signal)
-        :param x: vector of the data samples
-        :param k_fold: number of folds
-        :param degrees:
-        :param lambdas: lambdas to test
-        :param seed: random seed
-        :return: best degree and best lambda for ridge regression
+        :param X: vector of the data samples
+        :param degree: maximum degree of the polynomial basis
+        :param k_fold: number of groups for the data
+        :param lambda_: regularization factor (penalty factor)
+        :param max_iters: number of steps for the gradient descent
+        :param gamma: gradient descent factor, (1/t, for t iterations. adaptive gradient descent factor) if gamma == -1
+        :param batch: batch size
+        :param reg: if True, regularized logistic regression, else, normal logistic regression
+        :return: loss for train, accuracy for test, weights. Computed in mean over all k_folds
     """
+    y = np.where(y==-1, 0, y)
+    w = np.ones(X.shape[1]*degree + 1)
+    seed=13
     k_indices = modselection.build_k_indices(y, k_fold, seed)
-    best_lambdas = []
-    best_rmses = []
-    best_accuracies = []
-    for degree in degrees:
-        rmse_train = []
-        rmse_test = []
-        accuracies = []
-        for lambda_ in lambdas:
-            rmse_train_lambda = []
-            rmse_test_lambda = []
-            accuracies_lambda = []
-            for k in range(k_fold):
-                loss_train, loss_test, accuracy_tmp, w = cross_validation_ridge(y, x, k_indices, k, lambda_, degree)
-                rmse_train_lambda.append(loss_train)
-                rmse_test_lambda.append(loss_test)
-                accuracies_lambda.append(accuracy_tmp)
 
-            rmse_train.append(np.mean(rmse_train_lambda))
-            rmse_test.append(np.mean(rmse_test_lambda))
-            accuracies.append(np.mean(accuracies_lambda))
-
-        ind_lambda_opt = np.argmin(rmse_test)
-        best_lamda_tmp = lambdas[ind_lambda_opt]
-        best_rmse_tmp = rmse_test[ind_lambda_opt]
-        best_lambdas.append(best_lamda_tmp)
-        best_rmses.append(best_rmse_tmp)
-        best_accuracies.append(accuracies[ind_lambda_opt])
-
-    ind_best_degree = np.argmin(best_rmses)
-    best_lambda = best_lambdas[ind_best_degree]
-    best_degree = degrees[ind_best_degree]
-    accuracy = best_accuracies[ind_best_degree]
-    return best_degree, best_lambda
+    list_accuracy_te = []
+    list_loss_tr = []
+    list_w = []
+    for k in range(k_fold):
+        loss_tr, accuracy_te, w = reg_logistic_regression(y, X, k_indices, k, degree, lambda_, max_iters, w, gamma, batch, reg)
+        list_accuracy_te.append(accuracy_te)
+        list_loss_tr.append(loss_tr)
+        list_w.append(w)
+    return np.mean(list_loss_tr), np.mean(list_accuracy_te), np.mean(list_w, axis=0)
 
 def create_prediction():
     """Create predictions for kaggle."""
-    y, X, dict_mask_jets_train, ids = helpers_us.process_data('Data/train.csv', inv_log=True)
-    best_degrees = []
-    best_lambdas = []
-    for i in range(len(dict_mask_jets_train)):
-        best_degree, best_lambda = best_model_ridge(y[dict_mask_jets_train[i]], X[i], 5, np.arange(2,5), np.logspace(-6, 0, 15), seed=56)
-        best_degrees.append(best_degree)
-        best_lambdas.append(best_lambda)
 
-    best_weights = []
+    y, X, dict_mask_jets_train, ids = helpers_us.process_data('Data/train.csv', inv_log=True)
+    best_param = [[2,0.0072],[2,0.1389],[2,0.1389]] #found with the function best_model_logistic
+    best_w = []
+
     for i in range(len(dict_mask_jets_train)):
         xi = X[i]
         yi = y[dict_mask_jets_train[i]]
-
-        xi = modselection.build_poly(xi, best_degrees[i])
-        w, _ = imp.ridge_regression(yi, xi, best_lambdas[i])
-        best_weights.append(w)
+        _,_,w = cross_reg_logistic_regression(yi, xi, degree = best_param[i][0], k_fold=6,
+                                             lambda_= best_param[i][1], max_iters = 500, gamma = -1, batch=35)
+        best_w.append(w)
 
     y, X, dict_mask_jets_train, ids = helpers_us.process_data('Data/test.csv', inv_log=True)
     y_pred = np.zeros(y.shape[0])
-
     for i in range(len(dict_mask_jets_train)):
         xi = X[i]
-        xi = modselection.build_poly(xi, best_degrees[i])
-        y_test_pred = helpers.predict_labels(best_weights[i], xi)
+        xi = modselection.build_poly(xi, 2)
+        y_test_pred = modselection.predict_labels_logistic(best_w[i], xi)
         y_pred[dict_mask_jets_train[i]] = y_test_pred
-    helpers.create_csv_submission(ids, y_pred, "prediction.csv")
+
+    helpers.create_csv_submission(ids, y_pred, "true_prediction.csv")
 
 
 if __name__ == '__main__':

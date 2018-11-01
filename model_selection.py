@@ -5,6 +5,10 @@ import implementations as imp
 import visualization as visu
 import numpy as np
 from proj1_helpers import *
+from ipywidgets import IntProgress
+from IPython.display import display
+from model_selection import *
+import time
 
 def calculate_accuracy(y, y_pred):
     """
@@ -20,8 +24,7 @@ def predict_labels_logistic(weights, data):
     """Generates class predictions given weights, and a test data matrix"""
     y_pred = np.dot(data, weights)
     y_pred=imp.sigmoid(y_pred)
-    y_pred[np.where(y_pred >= 0.5)] = 1
-    y_pred[np.where(y_pred < 0.5)] = 0
+    y_pred = np.where(y_pred >= 0.5, 1, 0) 
     # 1,0 => 1,-1
     y_pred = 2 * y_pred
     y_pred = y_pred - 1
@@ -208,144 +211,101 @@ def best_model_ridge(y, x, k_fold, degrees, lambdas, seed=56):
 # ******************************************************
 # CROSS VALIDATION FUNCTIONS FOR REGULARIZED LOGISTIC REGRESSION
 # ******************************************************
-def cross_validation_logistic(y, x, k_indices, k, degree, lambda_):
-    """
 
-        :param y:
-        :param x:
-        :param k_indices:
-        :param k:
-        :param degree:
-        :param lambda_:
-        :return:
+def best_model_logistic(y, x, k_fold, degree, lambda_, seed):
+    """Calculate best degree and best lambda
+
+        :param y: outpus/labels, numpy array (-1 = background and 1 = signal)
+        :param x: vector of the data samples
+        :param k_fold: number of folds
+        :param degrees:
+        :param lambda_: lambdas to test
+        :param seed: random seed
+        :return: best degree, best lambda and corresponding accuracy for logistic regression
     """
-    # Build test and training set
+    y = np.where(y==-1, 0, y)
+    best_degree = 0
+    best_lambda = 0
+    best_accuracy = 0
+    for deg in degree:
+        for lam in lambda_:
+            _, accuracy, w = cross_reg_logistic_regression(y, x, degree=deg, k_fold=k_fold, 
+                    lambda_= lam, max_iters=300, gamma=-1, batch=30)
+            print(np.mean(accuracy))
+            if np.mean(accuracy) > best_accuracy:
+                best_accuracy = np.mean(accuracy)
+                best_lambda = lam
+                best_degree = deg
+    print('best deg : {},  best lambda : {}, best accuracy : {}'.format(best_degree, best_lambda, best_accuracy))
+    return best_degree, best_lambda, best_accuracy
+
+def reg_logistic_regression(y, X, k_indices, k, degree, lam, max_iters, initial_w, gamma, batch, reg):
+    """function for ridge regression
+
+        :param y: outpus/labels, numpy array (-1 = background and 1 = signal)
+        :param X: vector of the data samples
+        :param k_indices: k indices groups for k-fold
+        :param k: k'th group to select
+        :param degree: maximum degree of the polynomial basis
+        :param lam: regularization factor (penalty factor)
+        :param max_iters: number of steps for the gradient descent
+        :param initial_w: initial weights
+        :param gamma: gradient descent factor, (1/t, for t iterations. adaptive gradient descent factor) if gamma == -1 
+        :param batch: batch size
+        :param reg: if True, regularized logistic regression, else, normal logistic regression
+        :return: loss for train, accuracy for test, weights.
+    """
     te_indice = k_indices[k]
-    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)]
-    tr_indice = tr_indice.reshape(-1)
+    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)].reshape(-1)
     y_test = y[te_indice]
     y_train = y[tr_indice]
-    X_test = x[te_indice]
-    X_train = x[tr_indice]
-
-    # form data with polynomial degree
+    X_test = X[te_indice]
+    X_train = X[tr_indice]
     tx_training = build_poly(X_train, degree)
     tx_test = build_poly(X_test, degree)
+    
+    w = initial_w
+    
+    progressif = 0
+    if gamma == -1:
+        progressif = 1
+    
+    for n_iter in range(max_iters):
+        gamma = progressif*(1/(n_iter+1)) + (1-progressif)*gamma #formula to determine gamma
+        for y_b, tx_b in imp.batch_iter(y_train, tx_training, batch_size=batch, num_batches=1):
+            if reg==True:
+                w, loss_tr = imp.learning_by_penalized_gradient_logistic(y_b, tx_b, w, gamma, lam)
+            else:
+                w, loss_tr = imp.learning_by_gradient_descent_logistic(y_b, tx_b, w, gamma)
+    accuracy_te = np.sum(np.where(np.abs(y_test - imp.sigmoid(tx_test @ w)) < 0.5, 1, 0)) / len(y_test)
+    return loss_tr, accuracy_te, w
 
-    # ******** LOGISTIC REGRESSION *******
-    # w, loss = logistic_regression(y_train, tx_training)
+def cross_reg_logistic_regression(y, X, degree, k_fold, lambda_, max_iters,
+                                  gamma = -1,  batch = 50, reg = True):
+    """Cross validation function for logistic regression techniques
 
-    # ******** REG LOGISTIC REGRESSION *******
-    w, loss = imp.reg_logistic_regression(y_train, tx_training, lambda_)
-
-    # calculate the loss for train and test data
-    loss_tr = np.sqrt(2 * loss)
-    # loss_te = np.sqrt(2 * calculate_loss(y_test, tx_test, w))
-    pred = imp.sigmoid(tx_test @ w)
-    loss_te = np.sum(np.where(np.abs(y_test - pred) < 0.5, 1, 0)) / len(y_test)
-
-    return loss_tr, loss_te, w
-
-
-def cross_validation_logistic_demo(y, x, lambda_):
+        :param y: outpus/labels, numpy array (-1 = background and 1 = signal)
+        :param X: vector of the data samples
+        :param degree: maximum degree of the polynomial basis
+        :param k_fold: number of groups for the data
+        :param lambda_: regularization factor (penalty factor)
+        :param max_iters: number of steps for the gradient descent
+        :param gamma: gradient descent factor, (1/t, for t iterations. adaptive gradient descent factor) if gamma == -1 
+        :param batch: batch size
+        :param reg: if True, regularized logistic regression, else, normal logistic regression
+        :return: loss for train, accuracy for test, weights. Computed in mean over all k_folds
     """
-
-        :param y:
-        :param x:
-        :return:
-    """
-    seed = 12
-    k_fold = 5
-    # split data in k fold
+    y = np.where(y==-1, 0, y)
+    w = np.ones(X.shape[1]*degree + 1)
+    seed=13
     k_indices = build_k_indices(y, k_fold, seed)
-    # define lists to store the loss of training data and test data
-
-    degree = np.array([2])
-    global_min_tr = []
-    global_min_te = []
-    global_w = []
-    global_lambdas = []
-
-    for deg in degree:
-
-        min_rmse_tr = []
-        min_rmse_te = []
-        w_k = []
-        lambdas = []
-        for k in range(k_fold):
-            max_lambda = 0
-            max_loss_te = 0
-            max_loss_tr = 0
-            max_w = []
-            for lam in np.array([lambda_]):
-                loss_tr, loss_te, w = cross_validation_logistic(y, x, k_indices, k, deg, lam)
-                if loss_te > max_loss_te:
-                    max_loss_te = loss_te
-                    max_lambda = lam
-                    max_loss_tr = loss_tr
-                    max_w = w
-            print('DEGREE', deg, 'lambda', max_lambda, 'accuracy', max_loss_te)
-            min_rmse_tr.append(max_loss_tr)
-            min_rmse_te.append(max_loss_te)
-            w_k.append(max_w)
-            lambdas.append(max_lambda)
-
-        global_min_tr.append(np.mean(min_rmse_tr))
-        global_min_te.append(np.mean(min_rmse_te))
-        global_w.append(np.mean(w_k, axis=0))
-        global_lambdas.append(np.mean(lambdas))
-
-    visu.cross_validation_visualization(degree, global_min_tr, global_min_te)
-    return global_min_tr, global_min_te, global_w
-
-
-def cross_validation_logistic_demo_fixedparams(y, x, lambda_):
-    """
-
-        :param y:
-        :param x:
-        :return:
-    """
-    seed = 12
-    k_fold = 5
-    # split data in k fold
-    k_indices = build_k_indices(y, k_fold, seed)
-    # define lists to store the loss of training data and test data
-
-    degree = np.array([2])
-    global_min_tr = []
-    global_min_te = []
-    global_w = []
-    global_lambdas = []
-
-    for deg in degree:
-
-        min_rmse_tr = []
-        min_rmse_te = []
-        w_k = []
-        lambdas = []
-        for k in range(k_fold):
-            loss_tr, loss_te, w = cross_validation_logistic(y, x, k_indices, k, 2, lambda_)
-            max_lambda = 0
-            max_loss_te = 0
-            max_loss_tr = 0
-            max_w = []
-            for lam in np.array([lambda_]):
-                if loss_te > max_loss_te:
-                    max_loss_te = loss_te
-                    max_lambda = lam
-                    max_loss_tr = loss_tr
-                    max_w = w
-            print('DEGREE', deg, 'lambda', max_lambda, 'accuracy', max_loss_te)
-            min_rmse_tr.append(max_loss_tr)
-            min_rmse_te.append(max_loss_te)
-            w_k.append(max_w)
-            lambdas.append(max_lambda)
-
-        global_min_tr.append(np.mean(min_rmse_tr))
-        global_min_te.append(np.mean(min_rmse_te))
-        global_w.append(np.mean(w_k, axis=0))
-        global_lambdas.append(np.mean(lambdas))
-
-    visu.cross_validation_visualization(degree, global_min_tr, global_min_te)
-    return global_min_tr, global_min_te, global_w
+   
+    list_accuracy_te = []
+    list_loss_tr = []
+    list_w = []
+    for k in range(k_fold):
+        loss_tr, accuracy_te, w = reg_logistic_regression(y, X, k_indices, k, degree, lambda_, max_iters, w, gamma, batch, reg)
+        list_accuracy_te.append(accuracy_te)
+        list_loss_tr.append(loss_tr)
+        list_w.append(w)
+    return np.mean(list_loss_tr), np.mean(list_accuracy_te), np.mean(list_w, axis=0)
